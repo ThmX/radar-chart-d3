@@ -34,8 +34,8 @@ var RadarChart = {
       }else{
         tooltip.classed("visible", 1);
             
-            var x = d3.event.x;
-                y = d3.event.y;
+            var x = d3.event.layerX;
+            var y = d3.event.layerY;
 
         tooltip.select("text").classed('visible', 1).style("fill", cfg.tooltipColor);
         var padding=5;
