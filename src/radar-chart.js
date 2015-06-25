@@ -3,10 +3,13 @@ var RadarChart = {
     containerClass: 'radar-chart',
     w: 600,
     h: 600,
-    factor: 0.95,
+    factor: 0.9,
     factorLegend: 1,
     levels: 3,
     levelTick: false,
+    levelText: true,
+    levelTextX: 5,
+    levelTextY: 0,
     TickLength: 10,
     maxValue: 0,
     radians: 2 * Math.PI,
@@ -102,6 +105,29 @@ var RadarChart = {
         levelGroups.attr('class', function(d, i) {
           return 'level-group level-group-' + i;
         });
+
+        if (cfg.levelText) {
+          var levelText = levelGroups.selectAll('.legend').data(function(levelText) {
+            return d3.range(0, 1).map(function() { return levelText; });
+          });
+
+          levelText.enter().append('text');
+          levelText.exit().remove();
+
+          levelText
+              .attr('x', function(levelText){ return levelText; })
+              .attr('y', function(levelText){ return 0; })
+              .attr("class", "legend")
+              .style("font-family", "sans-serif")
+              .style("font-size", "10px")
+              .attr("fill", "#737373")
+              .attr('transform', function(levelFactor) {
+                  return 'translate(' + (cfg.w/2-levelFactor + cfg.levelTextX) + ', ' + (cfg.h/2-levelFactor + cfg.levelTextY) + ')';
+              })
+              .text(function(y, x){
+                  return d3.round(maxValue * y/radius, 2);
+              });
+        }
 
         var levelLine = levelGroups.selectAll('.level').data(function(levelFactor) {
           return d3.range(0, total).map(function() { return levelFactor; });
